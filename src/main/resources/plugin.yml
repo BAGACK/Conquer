@@ -1,6 +1,6 @@
 name: MGConquer
 main: com.comze_instancelabs.conquer.Main
-version: ${version}
+version: ${minigames.releaseversion}-${minigames.timestamp}
 author: [InstanceLabs,mepeisen]
 softdepend: [Vault, MinigamesLib]
 depend: [MinigamesLib]
