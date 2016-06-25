@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
 import com.comze_instancelabs.minigamesapi.Arena;
+import com.comze_instancelabs.minigamesapi.ArenaConfigStrings;
 import com.comze_instancelabs.minigamesapi.ArenaType;
 import com.comze_instancelabs.minigamesapi.MinigamesAPI;
 import com.comze_instancelabs.minigamesapi.util.Util;
@@ -174,8 +175,8 @@ public class IArena extends Arena {
 
 	public void loadCheckpoints() {
 		FileConfiguration config = MinigamesAPI.getAPI().pinstances.get(m).getArenasConfig().getConfig();
-		if (config.isSet("arenas." + this.getName() + ".checkpoints.")) {
-			for (String cp : config.getConfigurationSection("arenas." + this.getName() + ".checkpoints.").getKeys(false)) {
+		if (config.isSet(ArenaConfigStrings.ARENAS_PREFIX + this.getName() + ".checkpoints.")) {
+			for (String cp : config.getConfigurationSection(ArenaConfigStrings.ARENAS_PREFIX + this.getName() + ".checkpoints.").getKeys(false)) {
 				CheckPoint cp_ = new CheckPoint(m, this, Util.getComponentForArena(m, this.getName(), "checkpoints." + cp));
 				cps.add(cp_);
 			}
