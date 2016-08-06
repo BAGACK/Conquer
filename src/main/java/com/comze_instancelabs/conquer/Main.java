@@ -128,6 +128,11 @@ public class Main extends JavaPlugin implements Listener {
 		if (args.length > 1) {
 			if (args[0].equalsIgnoreCase("setcheckpoint")) {
 				if (sender instanceof Player) {
+					if (!sender.hasPermission("mgconquer.setup"))
+			        {
+			            sender.sendMessage(pli.getMessagesConfig().no_perm);
+			            return true;
+			        }
 					Player p = (Player) sender;
 					p.sendMessage(ChatColor.AQUA + "Place down the DragonEgg at every checkpoint you want.");
 					ItemStack item = new ItemStack(Material.DRAGON_EGG);
