@@ -124,11 +124,11 @@ public class Main extends JavaPlugin implements Listener {
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		cmdhandler.handleArgs(this, "mgconquer", "/" + cmd.getName(), sender, args);
+		cmdhandler.handleArgs(this, MinigamesAPI.getAPI().getPermissionGamePrefix("conquer"), "/" + cmd.getName(), sender, args);
 		if (args.length > 1) {
 			if (args[0].equalsIgnoreCase("setcheckpoint")) {
 				if (sender instanceof Player) {
-					if (!sender.hasPermission("mgconquer.setup"))
+					if (!sender.hasPermission(MinigamesAPI.getAPI().getPermissionGamePrefix("conquer") + ".setup"))
 			        {
 			            sender.sendMessage(pli.getMessagesConfig().no_perm);
 			            return true;
@@ -330,7 +330,7 @@ public class Main extends JavaPlugin implements Listener {
 	public void onBlockPlace(BlockPlaceEvent event) {
 		if (event.getBlock().getType() == Material.DRAGON_EGG) {
 			Player p = event.getPlayer();
-			if (p.hasPermission("mgconquer.setup")) {
+			if (p.hasPermission(MinigamesAPI.getAPI().getPermissionGamePrefix("conquer") + ".setup")) {
 				String arenaname_ = event.getItemInHand().getItemMeta().getDisplayName();
 
 				if (arenaname_ == null)
