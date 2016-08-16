@@ -41,7 +41,7 @@ public class CheckPoint {
 			byte b = getDataAtCurrentLoc("red");
 			if (b == 14) { // red
 				// red already (that shouldn't happen)
-				// System.out.println("red already there?");
+				// log("red already there?");
 				// cx_r = -2;
 				// cz_r = -2;
 				getNextLoc("red");
@@ -107,7 +107,7 @@ public class CheckPoint {
 			byte b = getDataAtCurrentLoc("blue");
 			if (b == 11) { // blue
 				// red already (that shouldn't happen)
-				// System.out.println("blue already there?");
+				// log.println("blue already there?");
 				// cx_b = -2;
 				// cz_b = -2;
 				getNextLoc("blue");
