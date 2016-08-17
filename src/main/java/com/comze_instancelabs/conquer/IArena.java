@@ -1,6 +1,7 @@
 package com.comze_instancelabs.conquer;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -153,7 +154,7 @@ public class IArena extends Arena {
 				try {
 					player.sendBlockChange(loc.clone().add(x, -2D, z), Material.DIAMOND_BLOCK, (byte) 0);
 				} catch (Exception e) {
-					e.printStackTrace();
+					MinigamesAPI.getAPI().getLogger().log(Level.WARNING, "exception", e);
 				}
 			}
 		}
