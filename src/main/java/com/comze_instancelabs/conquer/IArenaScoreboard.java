@@ -32,25 +32,27 @@ public class IArenaScoreboard extends ArenaScoreboard {
 			if (!ascore.containsKey(arena.getInternalName())) {
 				ascore.put(arena.getInternalName(), Bukkit.getScoreboardManager().getNewScoreboard());
 			}
+			final Scoreboard scoreboard = ascore.get(arena.getInternalName());
 			if (!aobjective.containsKey(arena.getInternalName())) {
-				aobjective.put(arena.getInternalName(), ascore.get(arena.getInternalName()).registerNewObjective(arena.getInternalName(), "dummy"));
+				aobjective.put(arena.getInternalName(), scoreboard.registerNewObjective(arena.getInternalName(), "dummy"));
 			}
 
-			aobjective.get(arena.getInternalName()).setDisplaySlot(DisplaySlot.SIDEBAR);
+			final Objective objective = aobjective.get(arena.getInternalName());
+			objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
-			aobjective.get(arena.getInternalName()).setDisplayName(MinigamesAPI.getAPI().pinstances.get(plugin).getMessagesConfig().scoreboard_title.replaceAll("<arena>", arena.getDisplayName()));
+			objective.setDisplayName(MinigamesAPI.getAPI().pinstances.get(plugin).getMessagesConfig().scoreboard_title.replaceAll("<arena>", arena.getDisplayName()));
 
-			ascore.get(arena.getInternalName()).resetScores(Bukkit.getOfflinePlayer(Integer.toString(arena.redcp - 1) + " "));
-			ascore.get(arena.getInternalName()).resetScores(Bukkit.getOfflinePlayer(Integer.toString(arena.redcp + 1) + " "));
-			ascore.get(arena.getInternalName()).resetScores(Bukkit.getOfflinePlayer(Integer.toString(arena.bluecp - 1) + "  "));
-			ascore.get(arena.getInternalName()).resetScores(Bukkit.getOfflinePlayer(Integer.toString(arena.bluecp + 1) + "  "));
+			reset(scoreboard, Integer.toString(arena.redcp - 1) + " ");
+			reset(scoreboard, Integer.toString(arena.redcp + 1) + " ");
+			reset(scoreboard, Integer.toString(arena.bluecp - 1) + "  ");
+			reset(scoreboard, Integer.toString(arena.bluecp + 1) + "  ");
 
-			aobjective.get(arena.getInternalName()).getScore(Bukkit.getOfflinePlayer(ChatColor.AQUA + "CHECKPOINTS:")).setScore(5);
-			aobjective.get(arena.getInternalName()).getScore(Bukkit.getOfflinePlayer(ChatColor.RED + "RED:")).setScore(4);
-			aobjective.get(arena.getInternalName()).getScore(Bukkit.getOfflinePlayer(Integer.toString(arena.redcp) + " ")).setScore(3);
-			aobjective.get(arena.getInternalName()).getScore(Bukkit.getOfflinePlayer(ChatColor.BLUE + "BLUE:")).setScore(2);
-			aobjective.get(arena.getInternalName()).getScore(Bukkit.getOfflinePlayer(Integer.toString(arena.bluecp) + "  ")).setScore(1);
-			p.setScoreboard(ascore.get(arena.getInternalName()));
+			get(objective, ChatColor.AQUA + "CHECKPOINTS:").setScore(5);
+			get(objective, ChatColor.RED + "RED:").setScore(4);
+			get(objective, Integer.toString(arena.redcp) + " ").setScore(3);
+			get(objective, ChatColor.BLUE + "BLUE:").setScore(2);
+			get(objective, Integer.toString(arena.bluecp) + "  ").setScore(1);
+			p.setScoreboard(scoreboard);
 		}
 	}
 
