@@ -36,15 +36,15 @@ public class CheckPoint {
 	}
 
 	public void evaluate(String conquerer, String team) {
-		if (team.equalsIgnoreCase("red")) {
+		if (team.equalsIgnoreCase(IArena.TEAM_RED)) {
 			// check if current block is blue, decrease blue too
-			byte b = getDataAtCurrentLoc("red");
+			byte b = getDataAtCurrentLoc(IArena.TEAM_RED);
 			if (b == 14) { // red
 				// red already (that shouldn't happen)
 				// log("red already there?");
 				// cx_r = -2;
 				// cz_r = -2;
-				getNextLoc("red");
+				getNextLoc(IArena.TEAM_RED);
 				return;
 			} else if (b == 11) { // blue
 				lastred = false;
@@ -60,7 +60,7 @@ public class CheckPoint {
 
 			red++;
 
-			setDataAtCurrentLoc("red");
+			setDataAtCurrentLoc(IArena.TEAM_RED);
 
 			if (red > 24) {
 				// check if it was blue before, if yes -> decrease blue cp
@@ -93,7 +93,7 @@ public class CheckPoint {
 				plugin.spawnFirework(this.getCenter(), Color.RED);
 				if (a.redcp > plugin.getAllCheckPoints(a.getName()) - 1) {
 					for (String p_ : a.getAllPlayers()) {
-						if (plugin.pteam.get(p_).equalsIgnoreCase("blue")) {
+						if (plugin.pteam.get(p_).equalsIgnoreCase(IArena.TEAM_BLUE)) {
 							plugin.pli.global_lost.put(p_, a);
 						}
 					}
@@ -101,16 +101,16 @@ public class CheckPoint {
 				}
 				plugin.scoreboard.updateScoreboard(a);
 			}
-			getNextLoc("red");
+			getNextLoc(IArena.TEAM_RED);
 		} else {
 			// check if current block is blue, decrease blue too
-			byte b = getDataAtCurrentLoc("blue");
+			byte b = getDataAtCurrentLoc(IArena.TEAM_BLUE);
 			if (b == 11) { // blue
 				// red already (that shouldn't happen)
 				// log.println("blue already there?");
 				// cx_b = -2;
 				// cz_b = -2;
-				getNextLoc("blue");
+				getNextLoc(IArena.TEAM_BLUE);
 				return;
 			} else if (b == 14) { // red
 				lastblue = false;
@@ -126,7 +126,7 @@ public class CheckPoint {
 
 			blue++;
 
-			setDataAtCurrentLoc("blue");
+			setDataAtCurrentLoc(IArena.TEAM_BLUE);
 
 			if (blue > 24) {
 				// check if it was red before, if yes -> decrease red cp
@@ -159,7 +159,7 @@ public class CheckPoint {
 				plugin.spawnFirework(this.getCenter(), Color.BLUE);
 				if (a.bluecp > plugin.getAllCheckPoints(a.getName()) - 1) {
 					for (String p_ : a.getAllPlayers()) {
-						if (plugin.pteam.get(p_).equalsIgnoreCase("red")) {
+						if (plugin.pteam.get(p_).equalsIgnoreCase(IArena.TEAM_RED)) {
 							plugin.pli.global_lost.put(p_, a);
 						}
 					}
@@ -167,12 +167,12 @@ public class CheckPoint {
 				}
 				plugin.scoreboard.updateScoreboard(a);
 			}
-			getNextLoc("blue");
+			getNextLoc(IArena.TEAM_BLUE);
 		}
 	}
 
 	public byte getDataAtCurrentLoc(String team) {
-		if (team.equalsIgnoreCase("red")) {
+		if (team.equalsIgnoreCase(IArena.TEAM_RED)) {
 			return center.clone().add(cx_r, 0, cz_r).getBlock().getData();
 		} else {
 			return center.clone().add(cx_b, 0, cz_b).getBlock().getData();
@@ -180,7 +180,7 @@ public class CheckPoint {
 	}
 
 	public void setDataAtCurrentLoc(String team) {
-		if (team.equalsIgnoreCase("red")) {
+		if (team.equalsIgnoreCase(IArena.TEAM_RED)) {
 			center.clone().add(cx_r, 0, cz_r).getBlock().setData((byte) 14);
 		} else {
 			center.clone().add(cx_b, 0, cz_b).getBlock().setData((byte) 11);
@@ -188,7 +188,7 @@ public class CheckPoint {
 	}
 
 	public int[] getNextLoc(String team) {
-		if (team.equalsIgnoreCase("red")) {
+		if (team.equalsIgnoreCase(IArena.TEAM_RED)) {
 			int[] ret = new int[2];
 			if (cx_r > 1) {
 				if (cz_r > 1) {

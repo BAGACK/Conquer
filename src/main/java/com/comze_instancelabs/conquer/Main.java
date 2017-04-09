@@ -29,6 +29,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
@@ -37,6 +38,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.comze_instancelabs.conquer.gui.TeamSelectorGUI;
 import com.comze_instancelabs.minigamesapi.Arena;
 import com.comze_instancelabs.minigamesapi.ArenaConfigStrings;
 import com.comze_instancelabs.minigamesapi.ArenaSetup;
@@ -45,7 +47,6 @@ import com.comze_instancelabs.minigamesapi.MinigamesAPI;
 import com.comze_instancelabs.minigamesapi.PluginInstance;
 import com.comze_instancelabs.minigamesapi.config.ArenasConfig;
 import com.comze_instancelabs.minigamesapi.config.DefaultConfig;
-import com.comze_instancelabs.minigamesapi.config.MessagesConfig;
 import com.comze_instancelabs.minigamesapi.config.StatsConfig;
 import com.comze_instancelabs.minigamesapi.util.Util;
 import com.comze_instancelabs.minigamesapi.util.Validator;
@@ -59,13 +60,14 @@ public class Main extends JavaPlugin implements Listener {
 	static Main m = null;
 	IArenaScoreboard scoreboard = new IArenaScoreboard(this);
 	ICommandHandler cmdhandler = new ICommandHandler();
+	public TeamSelectorGUI teamgui;
 
 	public static HashMap<String, String> pteam = new HashMap<String, String>();
 	public HashMap<String, Integer> pconqueredcps = new HashMap<String, Integer>();
 
 	public void onEnable() {
 		m = this;
-		api = MinigamesAPI.getAPI().setupAPI(this, "conquer", IArena.class, new ArenasConfig(this), new MessagesConfig(this), new IClassesConfig(this), new StatsConfig(this, false), new DefaultConfig(this, false), true);
+		api = MinigamesAPI.getAPI().setupAPI(this, "conquer", IArena.class, new ArenasConfig(this), new IMessagesConfig(this), new IClassesConfig(this), new StatsConfig(this, false), new DefaultConfig(this, false), true);
 		PluginInstance pinstance = api.pinstances.get(this);
 		pinstance.addLoadedArenas(loadArenas(this, pinstance.getArenasConfig()));
 		Bukkit.getPluginManager().registerEvents(this, this);
@@ -76,7 +78,9 @@ public class Main extends JavaPlugin implements Listener {
 		MinigamesAPI.getAPI().registerArenaListenerLater(this, listener);
 		pli = pinstance;
 		pinstance.setAchievementGuiEnabled(true);
-
+		
+		teamgui = new TeamSelectorGUI(pli, this);
+		
 		this.getConfig().addDefault("config.spawn_fireworks_at_checkpoints", true);
 		this.getConfig().addDefault("config.checkpoint_register_y_axis", 100);
 
@@ -164,7 +168,7 @@ public class Main extends JavaPlugin implements Listener {
 
 		if (m.pteam.containsKey(p_)) {
 			Color c = Color.BLACK;
-			if (m.pteam.get(p_).equalsIgnoreCase("red")) {
+			if (m.pteam.get(p_).equalsIgnoreCase(IArena.TEAM_RED)) {
 				c = Color.RED;
 			} else {
 				c = Color.BLUE;
@@ -187,6 +191,20 @@ public class Main extends JavaPlugin implements Listener {
 		p.updateInventory();
 
 	}
+	
+	@EventHandler
+	public void onInteract(final PlayerInteractEvent event) {
+		if (event.hasItem()) {
+			if (pli.global_players.containsKey(event.getPlayer().getName())) {
+				Arena a = pli.global_players.get(event.getPlayer().getName());
+				if (event.getItem().getType() == Material.WOOL) {
+					if (a.getArenaState() != ArenaState.INGAME && !a.isArcadeMain() && !a.getIngameCountdownStarted()) {
+						teamgui.openGUI(event.getPlayer().getName());
+					}
+				}
+			}
+		}
+	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onMove(PlayerMoveEvent event) {
@@ -198,7 +216,7 @@ public class Main extends JavaPlugin implements Listener {
 					// player fell
 					if (pteam.containsKey(p.getName())) {
 						String team = pteam.get(p.getName());
-						if (team.equalsIgnoreCase("red")) {
+						if (team.equalsIgnoreCase(IArena.TEAM_RED)) {
 							if (!a.addBluePoints()) {
 								Util.teleportPlayerFixed(p, a.getSpawns().get(0));
 								m.addGear(p.getName());
@@ -229,7 +247,7 @@ public class Main extends JavaPlugin implements Listener {
 					p.setHealth(20D);
 					if (p.getKiller() instanceof Player) {
 						Player killer = (Player) p.getKiller();
-						if (pteam.get(killer.getName()).equalsIgnoreCase("red")) {
+						if (pteam.get(killer.getName()).equalsIgnoreCase(IArena.TEAM_RED)) {
 							if (!a.addRedPoints()) {
 								Bukkit.getScheduler().runTaskLater(this, new Runnable() {
 									public void run() {
@@ -349,6 +367,11 @@ public class Main extends JavaPlugin implements Listener {
 				event.setCancelled(true);
 			}
 		}
+		else if (event.getBlock().getType() == Material.WOOL) {
+			if (pli.global_players.containsKey(event.getPlayer().getName())) {
+				event.setCancelled(true);
+			}
+		}
 	}
 
 	public int getAllCheckPoints(String arenaname) {
@@ -402,6 +425,11 @@ public class Main extends JavaPlugin implements Listener {
 				}
 			}
 		}, 5L);
+	}
+	
+	public IMessagesConfig msg()
+	{
+		return (IMessagesConfig) this.pli.getMessagesConfig();
 	}
 
 }
