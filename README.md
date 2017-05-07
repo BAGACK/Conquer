@@ -1,4 +1,4 @@
-Conquer [![Build Status](http://www.minigameslib.de/build.php?app=Conquer&major=1)](http://www.minigameslib.de/buildref.php?app=Conquer&major=1)
+Conquer [![Build Status](http://www.minigameslib.de/build.png?app=Conquer&major=1)](http://www.minigameslib.de/buildref.php?app=Conquer&major=1)
 =======
 
 Conquer all checkpoints to win!
