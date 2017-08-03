@@ -48,6 +48,7 @@ import com.comze_instancelabs.minigamesapi.PluginInstance;
 import com.comze_instancelabs.minigamesapi.config.ArenasConfig;
 import com.comze_instancelabs.minigamesapi.config.DefaultConfig;
 import com.comze_instancelabs.minigamesapi.config.StatsConfig;
+import com.comze_instancelabs.minigamesapi.util.PlayerPickupItemHelper;
 import com.comze_instancelabs.minigamesapi.util.Util;
 import com.comze_instancelabs.minigamesapi.util.Validator;
 
@@ -79,6 +80,8 @@ public class Main extends JavaPlugin implements Listener {
 		pli = pinstance;
 		pinstance.setAchievementGuiEnabled(true);
 		
+		new PlayerPickupItemHelper(this, this::onPlayerPickupItem);
+
 		teamgui = new TeamSelectorGUI(pli, this);
 		
 		this.getConfig().addDefault("config.spawn_fireworks_at_checkpoints", true);
@@ -318,8 +321,7 @@ public class Main extends JavaPlugin implements Listener {
 		}
 	}
 
-	@EventHandler
-	public void onPlayerPickupItem(PlayerPickupItemEvent event) {
+	public void onPlayerPickupItem(PlayerPickupItemHelper.CustomPickupEvent event) {
 		Player p = event.getPlayer();
 		if (pli.global_players.containsKey(p.getName())) {
 			event.setCancelled(true);
