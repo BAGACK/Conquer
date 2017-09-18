@@ -36,6 +36,7 @@ public class CheckPoint {
 	}
 
 	public void evaluate(String conquerer, String team) {
+		if (team == null) return;
 		if (team.equalsIgnoreCase(IArena.TEAM_RED)) {
 			// check if current block is blue, decrease blue too
 			byte b = getDataAtCurrentLoc(IArena.TEAM_RED);
